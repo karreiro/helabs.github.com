@@ -167,20 +167,23 @@ var App = {
     }
   },
   InterfaceActions: function() {
-    var bottomBar = "show_bottom_bar";
-    if(document.cookie.indexOf(bottomBar) == -1){
-      $("#bottom-bar").show();
-    }else{
-      $("a.close-bar").click();
+
+    // bottom_bar - advertise job vacancies
+    var bottomBar = $("#bottom-bar");
+    if(bottomBar){
+      var flagShowBottomBar = "show_bottom_bar";
+      var linkCloseBar = $("a.close-bar");
+
+      new Date(localStorage.getItem(flagShowBottomBar)) < new Date() ? bottomBar.show() : bottomBar.fadeOut();
+
+      linkCloseBar.click(function() {
+        bottomBar.fadeOut(function(){
+          var dateExpirate = new Date();
+          dateExpirate.setDate(dateExpirate.getDate()+1);
+          localStorage.setItem(flagShowBottomBar, dateExpirate);
+        });
+       });
     }
-    $("a.close-bar").click(function(event) { 
-      event.preventDefault();
-      $('#bottom-bar').fadeOut();
-      var d = new Date();
-      d.setTime(d.getTime() + (1*24*60*60*1000));
-      var expires = "expires="+d.toUTCString();
-      document.cookie=bottomBar+"=false; expires="+expires;
-     });
 
     // Eduardo's easter egg
     $("img[src='/images/time/time-eduardo.jpg']").hover(function() {
